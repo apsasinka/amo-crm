@@ -7,6 +7,9 @@ import {
 } from "@testing-library/react";
 import { act } from "react";
 import Users from "./Users";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import UserDetailPage from "../pages/UserDetailPage";
 
 beforeEach(() => {
   //важно поместить наш мок в данную конструкцию для корректной работы
@@ -28,9 +31,7 @@ afterEach(() => {
 
 describe("Users test", () => {
   test("Render userlist", async () => {
-    await act(async () => {
-      render(<Users />);
-    });
+    render(<Users />);
 
     // await waitFor(() => {
     //   expect(screen.getByText("User 1")).toBeInTheDocument();
@@ -38,13 +39,30 @@ describe("Users test", () => {
     // });
     // или
 
-    const users = await waitFor(() => screen.findAllByTestId("user-item"));
+    const users = await screen.findAllByTestId("user-item");
 
     expect(users.length).toBe(2);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(
       "https://jsonplaceholder.typicode.com/users"
+    );
+  });
+
+  test("Test redirect to details page", async () => {
+    render(
+      <MemoryRouter initialEntries={["/users"]}>
+        <Routes>
+          <Route path="/users" element={<Users />} />
+          <Route path="/user/:id" element={<UserDetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const users = await screen.findAllByTestId("user-item");
+    userEvent.click(users[0]);
+    await waitFor(() =>
+      expect(screen.getByTestId("user-page")).toBeInTheDocument()
     );
   });
 });
