@@ -23,7 +23,7 @@ const Users = () => {
 
   return (
     <>
-      <h1>Users</h1>
+      <h1 data-testid="users-page">Users</h1>
       {users.length > 0 &&
         users.map((user) => (
           <div key={user.id}>

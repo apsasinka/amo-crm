@@ -11,6 +11,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import UserDetailPage from "../pages/UserDetailPage";
 import AppRouter from "../AppRouter";
+import { renderWithRouter } from "../tests/helpers/renderWithRouter";
 
 beforeEach(() => {
   //важно поместить наш мок в данную конструкцию для корректной работы
@@ -33,11 +34,7 @@ afterEach(() => {
 describe("Users test", () => {
   test("Render userlist", async () => {
     await act(async () => {
-      render(
-        <MemoryRouter>
-          <Users />
-        </MemoryRouter>
-      );
+      renderWithRouter(null, "/users");
     });
 
     // await waitFor(() => {
@@ -57,12 +54,7 @@ describe("Users test", () => {
   });
 
   test("Test redirect to details page", async () => {
-    render(
-      <MemoryRouter>
-        <AppRouter />
-        <Users />
-      </MemoryRouter>
-    );
+    renderWithRouter(null, "/users");
 
     const users = await screen.findAllByTestId("user-item");
     userEvent.click(users[0]);
