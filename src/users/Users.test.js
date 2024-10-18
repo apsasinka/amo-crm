@@ -10,6 +10,7 @@ import Users from "./Users";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import UserDetailPage from "../pages/UserDetailPage";
+import AppRouter from "../AppRouter";
 
 beforeEach(() => {
   //важно поместить наш мок в данную конструкцию для корректной работы
@@ -31,7 +32,13 @@ afterEach(() => {
 
 describe("Users test", () => {
   test("Render userlist", async () => {
-    render(<Users />);
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Users />
+        </MemoryRouter>
+      );
+    });
 
     // await waitFor(() => {
     //   expect(screen.getByText("User 1")).toBeInTheDocument();
@@ -51,11 +58,9 @@ describe("Users test", () => {
 
   test("Test redirect to details page", async () => {
     render(
-      <MemoryRouter initialEntries={["/users"]}>
-        <Routes>
-          <Route path="/users" element={<Users />} />
-          <Route path="/user/:id" element={<UserDetailPage />} />
-        </Routes>
+      <MemoryRouter>
+        <AppRouter />
+        <Users />
       </MemoryRouter>
     );
 
