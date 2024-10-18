@@ -5,11 +5,11 @@ const rootReducer = combineReducers({
   counter: counterSlice.reducer,
 });
 
-export const createReduxStore = () => {
+export const createReduxStore = (initialState = {}) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState: {
-      counter: { value: 1000 },
+      counter: initialState,
     },
   });
 };
